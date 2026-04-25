@@ -1,0 +1,10 @@
+ 
+Flask==2.3.0
+SQLAlchemy==2.0
+pymysql
+pandas
+requests-cache
+flask-cors
+pytest
+flake8
+mypy
