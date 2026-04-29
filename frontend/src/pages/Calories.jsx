@@ -12,7 +12,7 @@ export default function Calories() {
       `${import.meta.env.VITE_API_URL}/api/calories/${userId}`
     );
     const data = await res.json();
-    setList(data.items);
+    setList(data.items || []);
   };
 
   const addCalories = async () => {
@@ -23,7 +23,7 @@ export default function Calories() {
         user_id: userId,
         food_name: food,
         calories: Number(calories),
-        meal_type: "meal"
+        meal_type: "meal",
       }),
     });
 
@@ -37,34 +37,47 @@ export default function Calories() {
   }, []);
 
   return (
-    <div className="p-6 text-white">
-      <h2 className="text-2xl mb-4">Calories Tracker</h2>
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-black to-gray-900 text-white p-6 pt-24">
 
-      <input
-        placeholder="Food name"
-        value={food}
-        onChange={(e) => setFood(e.target.value)}
-        className="p-2 m-2 text-black"
-      />
+      <h2 className="text-3xl font-bold mb-6">Calories Tracker 🍎</h2>
 
-      <input
-        placeholder="Calories"
-        value={calories}
-        onChange={(e) => setCalories(e.target.value)}
-        className="p-2 m-2 text-black"
-      />
+      {/* INPUT SECTION */}
+      <div className="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/10 mb-6">
+        <input
+          placeholder="Food name"
+          value={food}
+          onChange={(e) => setFood(e.target.value)}
+          className="p-2 m-2 text-black rounded"
+        />
 
-      <button onClick={addCalories} className="bg-blue-500 p-2">
-        Add
-      </button>
+        <input
+          placeholder="Calories"
+          value={calories}
+          onChange={(e) => setCalories(e.target.value)}
+          className="p-2 m-2 text-black rounded"
+        />
 
-      <h3 className="mt-4">Total Entries</h3>
+        <button
+          onClick={addCalories}
+          className="bg-green-500 px-4 py-2 rounded ml-2"
+        >
+          Add
+        </button>
+      </div>
 
-      {list.map((item, i) => (
-        <div key={i} className="border p-2 mt-2">
-          {item.food_name} - {item.calories} kcal
-        </div>
-      ))}
+      {/* LIST */}
+      <div>
+        {list.map((item, i) => (
+          <div
+            key={i}
+            className="bg-white/10 backdrop-blur-md border border-white/10 p-4 rounded-xl mt-3"
+          >
+            <p className="font-semibold">{item.food_name}</p>
+            <p>{item.calories} kcal</p>
+            <p className="text-sm text-white/60">{item.meal_type}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
