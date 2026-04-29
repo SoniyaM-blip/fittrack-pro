@@ -1,52 +1,48 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const navigate = useNavigate();
 
-  return (
-    <div
-      className="min-h-screen text-white flex flex-col justify-center items-center text-center px-6"
-      style={{
-        backgroundImage:
-          "url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      {/* overlay */}
-      <div className="absolute inset-0 bg-black/60"></div>
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) navigate("/dashboard");
+  }, []);
 
-      <div className="relative z-10 max-w-2xl">
+  return (
+    <div className="relative min-h-screen flex items-center justify-center text-white overflow-hidden">
+
+      {/* ANIMATED GRADIENT BACKGROUND */}
+      <div className="absolute inset-0 bg-gradient-animation"></div>
+
+      {/* DARK OVERLAY */}
+      <div className="absolute inset-0 bg-black/40"></div>
+
+      {/* CONTENT */}
+      <div className="relative text-center max-w-2xl px-6">
         <h1 className="text-5xl font-bold mb-4">
           FitTrack Pro 💪
         </h1>
 
-        <p className="text-lg mb-6">
-          Track your workouts, monitor calories, set goals, and transform your fitness journey with real-time insights and progress tracking.
+        <p className="text-lg mb-6 text-white/90">
+          Track workouts, calories, and goals with real-time insights.
+          Build a healthier version of yourself every day.
         </p>
 
         <div className="space-x-4">
           <button
             onClick={() => navigate("/login")}
-            className="bg-white text-black px-6 py-2 rounded-full font-semibold"
+            className="px-6 py-2 rounded-full bg-white text-black font-semibold"
           >
             Login
           </button>
 
           <button
             onClick={() => navigate("/register")}
-            className="border border-white px-6 py-2 rounded-full"
+            className="px-6 py-2 rounded-full border border-white"
           >
             Register
           </button>
-        </div>
-
-        {/* FEATURES */}
-        <div className="mt-10 grid gap-4 text-sm">
-          <p>🏋️ Smart Workout Tracking</p>
-          <p>🍎 Calorie Monitoring System</p>
-          <p>🎯 Personal Fitness Goals</p>
-          <p>📊 Progress Dashboards & Charts</p>
         </div>
       </div>
     </div>
