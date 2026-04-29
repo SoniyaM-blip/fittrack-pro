@@ -5,30 +5,33 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
-# Enable CORS
-CORS(app)
+# Enable CORS (allow frontend Vercel app)
+CORS(app, origins=["*"])
+
 
 # -------------------------
-# DB CONNECTION
+# DB CONNECTION (POSTGRESQL)
 # -------------------------
 def get_connection():
     return psycopg2.connect(
-        host="127.0.0.1",
+        host="127.0.0.1",   # CHANGE THIS ON RENDER (use DB host)
         database="fittrack",
         user="postgres",
         password="SoAnu",
         port="5432"
     )
 
+
 # -------------------------
 # HEALTH CHECK
 # -------------------------
 @app.route("/")
 def home():
-    return jsonify({"message": "Backend running 🚀"})
+    return jsonify({"message": "FitTrack Backend Running 🚀"})
+
 
 # -------------------------
-# REGISTER
+# REGISTER USER
 # -------------------------
 @app.route("/api/register", methods=["POST"])
 def register():
@@ -39,27 +42,31 @@ def register():
         password = data.get("password")
         first_name = data.get("first_name")
 
-        hashed = generate_password_hash(password)
+        if not email or not password:
+            return jsonify({"message": "Missing fields"}), 400
+
+        hashed_password = generate_password_hash(password)
 
         conn = get_connection()
         cur = conn.cursor()
 
-        cur.execute(
-            "INSERT INTO users (email, password, first_name) VALUES (%s, %s, %s)",
-            (email, hashed, first_name)
-        )
+        cur.execute("""
+            INSERT INTO users (email, password, first_name)
+            VALUES (%s, %s, %s)
+        """, (email, hashed_password, first_name))
 
         conn.commit()
         cur.close()
         conn.close()
 
-        return jsonify({"message": "User registered"})
+        return jsonify({"message": "User registered successfully"}), 201
 
     except Exception as e:
         return jsonify({"message": str(e)}), 500
 
+
 # -------------------------
-# LOGIN
+# LOGIN USER
 # -------------------------
 @app.route("/api/login", methods=["POST"])
 def login():
@@ -72,10 +79,11 @@ def login():
         conn = get_connection()
         cur = conn.cursor()
 
-        cur.execute(
-            "SELECT password, first_name FROM users WHERE email=%s",
-            (email,)
-        )
+        cur.execute("""
+            SELECT password, first_name
+            FROM users
+            WHERE email = %s
+        """, (email,))
 
         user = cur.fetchone()
 
@@ -97,8 +105,9 @@ def login():
     except Exception as e:
         return jsonify({"message": str(e)}), 500
 
+
 # -------------------------
-# WORKOUTS (FIXED)
+# WORKOUTS STATS
 # -------------------------
 @app.route("/api/workouts", methods=["GET"])
 def get_workouts():
@@ -134,56 +143,76 @@ def get_workouts():
     except Exception as e:
         return jsonify({"message": str(e)}), 500
 
-#------------------------------
-#         GOALS
-#-------------------------------
-
-@app.route("/api/goals", methods=["POST"])
-def create_goal():
-    data = request.json
-
-    user_id = data["user_id"]
-    goal_type = data["goal_type"]
-    target_value = data["target_value"]
-
-    cur = mysql.connection.cursor()
-    cur.execute("""
-        INSERT INTO goals (user_id, goal_type, target_value)
-        VALUES (%s, %s, %s)
-    """, (user_id, goal_type, target_value))
-
-    mysql.connection.commit()
-    cur.close()
-
-    return jsonify({"message": "Goal created successfully"})
-
-
-@app.route("/api/goals/<int:user_id>", methods=["GET"])
-def get_goals(user_id):
-    cur = mysql.connection.cursor()
-    cur.execute("""
-        SELECT id, goal_type, target_value, created_at
-        FROM goals
-        WHERE user_id = %s
-        ORDER BY created_at DESC
-    """, (user_id,))
-
-    rows = cur.fetchall()
-    cur.close()
-
-    goals = []
-    for r in rows:
-        goals.append({
-            "id": r[0],
-            "goal_type": r[1],
-            "target_value": r[2],
-            "created_at": str(r[3])
-        })
-
-    return jsonify(goals)
 
 # -------------------------
-# RUN
+# GOALS - CREATE
+# -------------------------
+@app.route("/api/goals", methods=["POST"])
+def create_goal():
+    try:
+        data = request.get_json()
+
+        user_id = data.get("user_id")
+        goal_type = data.get("goal_type")
+        target_value = data.get("target_value")
+
+        conn = get_connection()
+        cur = conn.cursor()
+
+        cur.execute("""
+            INSERT INTO goals (user_id, goal_type, target_value)
+            VALUES (%s, %s, %s)
+        """, (user_id, goal_type, target_value))
+
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        return jsonify({"message": "Goal created successfully"}), 201
+
+    except Exception as e:
+        return jsonify({"message": str(e)}), 500
+
+
+# -------------------------
+# GOALS - GET
+# -------------------------
+@app.route("/api/goals/<int:user_id>", methods=["GET"])
+def get_goals(user_id):
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+
+        cur.execute("""
+            SELECT id, goal_type, target_value, created_at
+            FROM goals
+            WHERE user_id = %s
+            ORDER BY created_at DESC
+        """, (user_id,))
+
+        rows = cur.fetchall()
+
+        cur.close()
+        conn.close()
+
+        goals = [
+            {
+                "id": r[0],
+                "goal_type": r[1],
+                "target_value": r[2],
+                "created_at": str(r[3])
+            }
+            for r in rows
+        ]
+
+        return jsonify(goals)
+
+    except Exception as e:
+        return jsonify({"message": str(e)}), 500
+
+
+# -------------------------
+# RUN APP
 # -------------------------
 if __name__ == "__main__":
     app.run(debug=True)
