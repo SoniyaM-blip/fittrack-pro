@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import AuthBackground from "../components/AuthBackground";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  // 🚀 redirect if already logged in
+  // redirect if already logged in
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) navigate("/dashboard");
+    if (localStorage.getItem("token")) {
+      navigate("/dashboard");
+    }
   }, []);
 
   const handleLogin = async (e) => {
@@ -31,7 +33,7 @@ export default function Login() {
         localStorage.setItem("token", data.token);
         localStorage.setItem("firstName", data.first_name);
 
-        // 🔥 update navbar instantly
+        // update navbar instantly
         window.dispatchEvent(new Event("userLogin"));
 
         navigate("/dashboard");
@@ -39,27 +41,19 @@ export default function Login() {
         alert(data.message || "Login failed");
       }
     } catch (err) {
-      console.log(err);
       alert("Server error");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
-
-      {/* BACKGROUND */}
-      <div className="absolute inset-0 bg-gradient-animation"></div>
-      <div className="absolute inset-0 bg-black/50"></div>
-
-      {/* LOGIN CARD */}
+    <AuthBackground>
       <form
         onSubmit={handleLogin}
-        className="relative z-10 bg-white/10 backdrop-blur-md p-8 rounded-2xl w-96 text-white border border-white/20"
+        className="bg-white/10 backdrop-blur-md p-8 rounded-2xl w-96 text-white border border-white/20"
       >
-        {/* LOGO + TAGLINE */}
         <div className="text-center mb-6">
           <h1 className="text-3xl font-bold">💪 FitTrack Pro</h1>
-          <p className="text-sm text-white/70">Train smarter. Track better.</p>
+          <p className="text-white/70 text-sm">Train smarter. Track better.</p>
         </div>
 
         <input
@@ -77,13 +71,10 @@ export default function Login() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button
-          type="submit"
-          className="w-full bg-gradient-to-r from-purple-500 to-pink-500 p-2 rounded"
-        >
+        <button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 p-2 rounded">
           Login
         </button>
       </form>
-    </div>
+    </AuthBackground>
   );
 }
