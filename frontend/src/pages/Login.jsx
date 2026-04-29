@@ -1,83 +1,42 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+return (
+  <div
+    className="min-h-screen flex items-center justify-center bg-cover bg-center relative"
+    style={{
+      backgroundImage:
+        "url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438')",
+    }}
+  >
+    {/* DARK OVERLAY */}
+    <div className="absolute inset-0 bg-black/60"></div>
 
-export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+    {/* LOGIN CARD */}
+    <form
+      onSubmit={handleLogin}
+      className="relative z-10 bg-white/10 backdrop-blur-md p-8 rounded-2xl w-96 text-white border border-white/20"
+    >
+      <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+      <input
+        className="w-full p-2 mb-4 rounded bg-white/20 outline-none placeholder-white/70"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
 
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, password }),
-        }
-      );
+      <input
+        className="w-full p-2 mb-4 rounded bg-white/20 outline-none placeholder-white/70"
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
 
-      const data = await res.json();
-
-if (res.ok) {
-  localStorage.setItem("token", data.token);
-  localStorage.setItem("firstName", data.first_name);
-
-  // 🔥 trigger navbar update
-  window.dispatchEvent(new Event("userLogin"));
-
-  navigate("/dashboard");
-} else {
-        alert(data.message || "Login failed");
-      }
-    } catch (err) {
-      console.log(err);
-      alert("Server error");
-    }
-  };
-
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-600 to-pink-500">
-      <form
-        onSubmit={handleLogin}
-        className="bg-white/10 backdrop-blur-md p-8 rounded-2xl w-96 text-white"
+      <button
+        type="submit"
+        className="w-full bg-gradient-to-r from-purple-500 to-pink-500 p-2 rounded hover:opacity-90 transition"
       >
-        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
-
-        <input
-          className="w-full p-2 mb-4 rounded bg-white/20 outline-none"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-
-        <input
-          className="w-full p-2 mb-4 rounded bg-white/20 outline-none"
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        <button
-          type="submit"
-          className="w-full bg-black/40 p-2 rounded hover:bg-black/60"
-        >
-          Login
-        </button>
-
-        {/* REGISTER LINK */}
-        <p className="mt-4 text-sm text-center">
-          Don’t have an account?{" "}
-          <Link to="/register" className="underline hover:text-gray-200">
-            Register here
-          </Link>
-        </p>
-      </form>
-    </div>
-  );
-}
+        Login
+      </button>
+    </form>
+  </div>
+);
