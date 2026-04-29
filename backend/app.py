@@ -6,18 +6,16 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
-# Allow frontend (Vercel)
+# -------------------------
+# CORS
+# -------------------------
 CORS(app, origins=["*"])
 
-
 # -------------------------
-# DB CONNECTION (FIXED)
+# DATABASE CONNECTION (RENDER SAFE)
 # -------------------------
 def get_connection():
-    return psycopg2.connect(
-        os.environ["DATABASE_URL"]
-    )
-
+    return psycopg2.connect(os.environ["DATABASE_URL"])
 
 # -------------------------
 # HEALTH CHECK
@@ -53,7 +51,7 @@ def register():
         cur.close()
         conn.close()
 
-        return jsonify({"message": "User registered successfully"})
+        return jsonify({"message": "User registered successfully"}), 201
 
     except Exception as e:
         return jsonify({"message": str(e)}), 500
@@ -76,7 +74,7 @@ def login():
         cur.execute("""
             SELECT password, first_name
             FROM users
-            WHERE email=%s
+            WHERE email = %s
         """, (email,))
 
         user = cur.fetchone()
@@ -162,7 +160,7 @@ def create_goal():
         cur.close()
         conn.close()
 
-        return jsonify({"message": "Goal created successfully"})
+        return jsonify({"message": "Goal created successfully"}), 201
 
     except Exception as e:
         return jsonify({"message": str(e)}), 500
@@ -180,7 +178,7 @@ def get_goals(user_id):
         cur.execute("""
             SELECT id, goal_type, target_value, created_at
             FROM goals
-            WHERE user_id=%s
+            WHERE user_id = %s
             ORDER BY created_at DESC
         """, (user_id,))
 
@@ -204,7 +202,78 @@ def get_goals(user_id):
 
 
 # -------------------------
-# RUN
+# CALORIES - ADD
+# -------------------------
+@app.route("/api/calories", methods=["POST"])
+def add_calories():
+    try:
+        data = request.get_json()
+
+        user_id = data.get("user_id")
+        food_name = data.get("food_name")
+        calories = data.get("calories")
+        meal_type = data.get("meal_type")
+
+        conn = get_connection()
+        cur = conn.cursor()
+
+        cur.execute("""
+            INSERT INTO calories (user_id, food_name, calories, meal_type)
+            VALUES (%s, %s, %s, %s)
+        """, (user_id, food_name, calories, meal_type))
+
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        return jsonify({"message": "Calories added successfully"}), 201
+
+    except Exception as e:
+        return jsonify({"message": str(e)}), 500
+
+
+# -------------------------
+# CALORIES - GET
+# -------------------------
+@app.route("/api/calories/<int:user_id>", methods=["GET"])
+def get_calories(user_id):
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+
+        cur.execute("""
+            SELECT food_name, calories, meal_type, created_at
+            FROM calories
+            WHERE user_id = %s
+            ORDER BY created_at DESC
+        """, (user_id,))
+
+        rows = cur.fetchall()
+
+        cur.close()
+        conn.close()
+
+        total = sum([r[1] for r in rows])
+
+        return jsonify({
+            "total_calories": total,
+            "items": [
+                {
+                    "food_name": r[0],
+                    "calories": r[1],
+                    "meal_type": r[2],
+                    "created_at": str(r[3])
+                }
+                for r in rows
+            ]
+        })
+
+    except Exception as e:
+        return jsonify({"message": str(e)}), 500
+
+
+# -------------------------
+# RUN APP
 # -------------------------
 if __name__ == "__main__":
     app.run(debug=True)
