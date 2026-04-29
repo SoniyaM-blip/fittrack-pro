@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @keyframes gradientMove {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -12,7 +13,8 @@
     #7c3aed,
     #ec4899,
     #f97316,
-    #06b6d4
+    #06b6d4,
+    #22c55e
   );
   background-size: 400% 400%;
   animation: gradientMove 12s ease infinite;
