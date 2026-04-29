@@ -1,7 +1,3 @@
-<h1 style={{color:"red", fontSize:"30px"}}>
-  THIS IS THE NEW WORKOUT FILE 🔥
-</h1>
-
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import {
@@ -27,40 +23,15 @@ export default function Workouts() {
   }, []);
 
   const waysToTrain = [
-    {
-      title: "Cardio",
-      desc: "Treadmills, rowing machines, bikes, stair climbers and ellipticals.",
-    },
-    {
-      title: "Strength",
-      desc: "Free weights, machines and Olympic lifting platforms.",
-    },
-    {
-      title: "Functional",
-      desc: "Kettlebells, dumbbells and movement-based training.",
-    },
-    {
-      title: "Cycle Studio",
-      desc: "High-energy cycling workouts for all levels.",
-    },
-    {
-      title: "Group Exercise",
-      desc: "Motivating group classes with instructors.",
-    },
-    {
-      title: "Personal Training",
-      desc: "1-on-1 coaching tailored to your goals.",
-    },
+    { title: "Cardio", desc: "Treadmills, bikes, rowing machines." },
+    { title: "Strength", desc: "Free weights and machines." },
+    { title: "Functional", desc: "Kettlebells and movement training." },
+    { title: "Cycle Studio", desc: "High-energy cycling workouts." },
+    { title: "Group Exercise", desc: "Motivating group classes." },
+    { title: "Personal Training", desc: "1-on-1 coaching." },
   ];
 
-  const COLORS = [
-    "#ff6b6b",
-    "#feca57",
-    "#48dbfb",
-    "#1dd1a1",
-    "#5f27cd",
-    "#ff9ff3",
-  ];
+  const COLORS = ["#ff6b6b","#feca57","#48dbfb","#1dd1a1","#5f27cd","#ff9ff3"];
 
   const chartData = data
     ? Object.entries(data).map(([key, value]) => ({
@@ -74,7 +45,6 @@ export default function Workouts() {
 
       <Navbar />
 
-      {/* BACKGROUND */}
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
@@ -86,47 +56,31 @@ export default function Workouts() {
 
       <div className="relative z-10 px-8 pt-24 max-w-6xl mx-auto">
 
-        {/* ================= TOP SECTION ================= */}
         <h1 className="text-3xl font-bold mb-6">WAYS TO TRAIN</h1>
 
         <div className="grid md:grid-cols-3 gap-6 mb-16">
           {waysToTrain.map((item, index) => (
-            <div
-              key={index}
-              className="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/10 hover:scale-105 transition"
-            >
-              <h2 className="text-xl font-semibold mb-2">
-                {item.title}
-              </h2>
-              <p className="text-white/80 text-sm">
-                {item.desc}
-              </p>
+            <div key={index} className="bg-white/10 p-6 rounded-2xl">
+              <h2 className="text-xl font-semibold mb-2">{item.title}</h2>
+              <p className="text-white/80 text-sm">{item.desc}</p>
             </div>
           ))}
         </div>
 
-        {/* ================= STATS SECTION ================= */}
         <h1 className="text-3xl font-bold mb-6">YOUR ACTIVITY STATS</h1>
 
-        {!data && <p>Loading stats...</p>}
-
-        {data && (
+        {!data ? (
+          <p>Loading stats...</p>
+        ) : (
           <div className="grid md:grid-cols-2 gap-10">
 
-            {/* PIE CHART */}
-            <div className="bg-white/10 p-6 rounded-2xl backdrop-blur-md">
+            <div className="bg-white/10 p-6 rounded-2xl">
               <h2 className="mb-4 font-semibold">Workout Split</h2>
 
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
-                  <Pie
-                    data={chartData}
-                    dataKey="value"
-                    nameKey="name"
-                    outerRadius={110}
-                    label
-                  >
-                    {chartData.map((entry, index) => (
+                  <Pie data={chartData} dataKey="value" nameKey="name" outerRadius={110} label>
+                    {chartData.map((_, index) => (
                       <Cell key={index} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
@@ -135,8 +89,7 @@ export default function Workouts() {
               </ResponsiveContainer>
             </div>
 
-            {/* BAR CHART */}
-            <div className="bg-white/10 p-6 rounded-2xl backdrop-blur-md">
+            <div className="bg-white/10 p-6 rounded-2xl">
               <h2 className="mb-4 font-semibold">Workout Count</h2>
 
               <ResponsiveContainer width="100%" height={300}>
@@ -144,7 +97,7 @@ export default function Workouts() {
                   <XAxis dataKey="name" stroke="#fff" />
                   <YAxis stroke="#fff" />
                   <Tooltip />
-                  <Bar dataKey="value" fill="#ffffff" radius={[6, 6, 0, 0]} />
+                  <Bar dataKey="value" fill="#ffffff" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
