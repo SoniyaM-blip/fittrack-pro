@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -41,7 +41,7 @@ export default function Login() {
         onSubmit={handleLogin}
         className="bg-white/10 backdrop-blur-md p-8 rounded-2xl w-96 text-white"
       >
-        <h2 className="text-2xl font-bold mb-6">Login</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
 
         <input
           className="w-full p-2 mb-4 rounded bg-white/20 outline-none"
@@ -64,6 +64,14 @@ export default function Login() {
         >
           Login
         </button>
+
+        {/* REGISTER LINK */}
+        <p className="mt-4 text-sm text-center">
+          Don’t have an account?{" "}
+          <Link to="/register" className="underline hover:text-gray-200">
+            Register here
+          </Link>
+        </p>
       </form>
     </div>
   );
