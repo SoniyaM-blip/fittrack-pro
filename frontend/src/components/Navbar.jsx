@@ -1,8 +1,19 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
   const navigate = useNavigate();
-  const name = localStorage.getItem("firstName");
+  const [name, setName] = useState(localStorage.getItem("firstName"));
+
+useEffect(() => {
+  const syncName = () => {
+    setName(localStorage.getItem("firstName"));
+  };
+
+  window.addEventListener("storage", syncName);
+
+  return () => window.removeEventListener("storage", syncName);
+}, []);
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -52,8 +63,8 @@ export default function Navbar() {
         <div className="flex items-center gap-4">
 
           <span className="text-white/90 text-sm">
-            {name || "User"}
-          </span>
+  {name ? `👋 ${name}` : "Guest"}
+</span>
 
           <button
             onClick={logout}

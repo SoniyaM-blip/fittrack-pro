@@ -24,9 +24,14 @@ export default function Login() {
       const data = await res.json();
 
       if (res.ok) {
-        localStorage.setItem("token", data.token);
-        navigate("/dashboard");
-      } else {
+  localStorage.setItem("token", data.token);
+  localStorage.setItem("firstName", data.first_name);
+
+  // 🔥 trigger navbar update across app
+  window.dispatchEvent(new Event("storage"));
+
+  navigate("/dashboard");
+} else {
         alert(data.message || "Login failed");
       }
     } catch (err) {
