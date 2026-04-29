@@ -6,46 +6,47 @@ export default function Workouts() {
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/api/workouts`)
-      .then(res => res.json())
-      .then(res => setData(res))
-      .catch(err => console.log(err));
+      .then((res) => res.json())
+      .then((res) => setData(res))
+      .catch((err) => console.log(err));
   }, []);
 
   const workouts = [
     {
       title: "Cardio",
-      desc: "Add variety with treadmills, rowing machines, bikes and more.",
+      desc: "Treadmills, rowing machines, bikes, stair climbers and ellipticals.",
       key: "cardio",
     },
     {
       title: "Strength",
-      desc: "Train with weights, machines and lifting platforms.",
+      desc: "Free weights, Olympic lifting platforms and machines.",
       key: "strength",
     },
     {
       title: "Functional",
-      desc: "Kettlebells, dumbbells and natural movement training.",
+      desc: "Kettlebells, dumbbells and movement training.",
       key: "functional",
     },
     {
       title: "Cycle Studio",
-      desc: "High-energy bike workouts for all levels.",
+      desc: "High-energy bike workouts for all fitness levels.",
       key: "hiit",
     },
     {
       title: "Group Exercise",
-      desc: "Train with others and stay motivated.",
+      desc: "Motivating group-based training sessions.",
       key: "yoga",
     },
     {
       title: "Personal Training",
-      desc: "Get expert guidance tailored to you.",
+      desc: "Tailored 1-on-1 coaching.",
       key: "pilates",
     },
   ];
 
   return (
     <div className="min-h-screen text-white relative overflow-hidden">
+
       <Navbar />
 
       {/* BACKGROUND */}
@@ -77,9 +78,9 @@ export default function Workouts() {
           {workouts.map((item, index) => (
             <div
               key={index}
-              className="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/10 hover:scale-105 transition duration-300"
+              className="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/10 hover:scale-105 transition"
             >
-              <h2 className="text-xl font-semibold mb-3">
+              <h2 className="text-xl font-semibold mb-2">
                 {item.title}
               </h2>
 
@@ -87,9 +88,8 @@ export default function Workouts() {
                 {item.desc}
               </p>
 
-              {/* SHOW REAL DATA */}
               {data && (
-                <div className="text-2xl font-bold">
+                <div className="text-3xl font-bold">
                   {data[item.key] || 0}
                 </div>
               )}
@@ -103,6 +103,7 @@ export default function Workouts() {
       <div className="absolute bottom-0 w-full text-center text-white/70 text-xs p-4">
         © {new Date().getFullYear()} FitTrack Pro
       </div>
+
     </div>
   );
 }
