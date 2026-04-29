@@ -8,23 +8,54 @@ import Register from "./pages/Register";
 import Goals from "./pages/Goals";
 import Calories from "./pages/Calories";
 
+import Layout from "./components/Layout";
+
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
 
-        {/* PUBLIC LANDING PAGE */}
+        {/* PUBLIC */}
         <Route path="/" element={<Home />} />
-
-        {/* AUTH PAGES */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* APP ROUTES */}
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/workouts" element={<Workouts />} />
-        <Route path="/goals" element={<Goals />} />
-        <Route path="/calories" element={<Calories />} />
+        {/* PROTECTED PAGES (WITH NAVBAR) */}
+        <Route
+          path="/dashboard"
+          element={
+            <Layout>
+              <Dashboard />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/workouts"
+          element={
+            <Layout>
+              <Workouts />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/goals"
+          element={
+            <Layout>
+              <Goals />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/calories"
+          element={
+            <Layout>
+              <Calories />
+            </Layout>
+          }
+        />
 
       </Routes>
     </BrowserRouter>
