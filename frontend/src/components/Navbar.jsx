@@ -37,6 +37,15 @@ export default function Navbar() {
             Workouts
           </Link>
 
+          {/* NEW: CALORIES TRACKER */}
+          <Link to="/calories" className="hover:opacity-80">
+            Calories 🍎
+          </Link>
+
+          <Link to="/goals" className="hover:opacity-80">
+            Goals 🎯
+          </Link>
+
         </div>
 
         {/* USER + LOGOUT */}
