@@ -1,33 +1,52 @@
+import { useEffect, useState } from "react";
+import Navbar from "../components/Navbar";
+
 export default function Workouts() {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL}/api/workouts`)
+      .then(res => res.json())
+      .then(res => setData(res))
+      .catch(err => console.log(err));
+  }, []);
+
   const workouts = [
     {
       title: "Cardio",
-      desc: "Add variety with treadmills, rowing machines, bikes, stair climbers and ellipticals.",
+      desc: "Add variety with treadmills, rowing machines, bikes and more.",
+      key: "cardio",
     },
     {
       title: "Strength",
-      desc: "Full suite of free weights, Olympic lifting platforms and traditional strength equipment.",
+      desc: "Train with weights, machines and lifting platforms.",
+      key: "strength",
     },
     {
       title: "Functional",
-      desc: "Train natural movement with kettlebells, dumbbells and medicine balls.",
+      desc: "Kettlebells, dumbbells and natural movement training.",
+      key: "functional",
     },
     {
       title: "Cycle Studio",
-      desc: "High-energy bike workouts suitable for all fitness levels.",
+      desc: "High-energy bike workouts for all levels.",
+      key: "hiit",
     },
     {
       title: "Group Exercise",
-      desc: "Stay motivated training with like-minded people in group classes.",
+      desc: "Train with others and stay motivated.",
+      key: "yoga",
     },
     {
       title: "Personal Training",
-      desc: "Get tailored guidance from a qualified personal trainer.",
+      desc: "Get expert guidance tailored to you.",
+      key: "pilates",
     },
   ];
 
   return (
     <div className="min-h-screen text-white relative overflow-hidden">
+      <Navbar />
 
       {/* BACKGROUND */}
       <div
@@ -38,12 +57,12 @@ export default function Workouts() {
         }}
       />
 
+      {/* OVERLAY */}
       <div className="absolute inset-0 bg-gradient-to-br from-purple-600/70 via-pink-500/60 to-orange-400/50" />
 
       {/* CONTENT */}
       <div className="relative z-10 px-8 pt-24 max-w-6xl mx-auto">
 
-        {/* TITLE */}
         <h1 className="text-3xl font-bold mb-2 tracking-wide">
           WAYS TO TRAIN
         </h1>
@@ -52,9 +71,9 @@ export default function Workouts() {
           Discover different ways to stay active and build your fitness
         </p>
 
-        {/* GRID */}
-        <div className="grid md:grid-cols-3 gap-6">
+        {!data && <p>Loading...</p>}
 
+        <div className="grid md:grid-cols-3 gap-6">
           {workouts.map((item, index) => (
             <div
               key={index}
@@ -64,12 +83,18 @@ export default function Workouts() {
                 {item.title}
               </h2>
 
-              <p className="text-white/80 text-sm leading-relaxed">
+              <p className="text-white/80 text-sm mb-4">
                 {item.desc}
               </p>
+
+              {/* SHOW REAL DATA */}
+              {data && (
+                <div className="text-2xl font-bold">
+                  {data[item.key] || 0}
+                </div>
+              )}
             </div>
           ))}
-
         </div>
 
       </div>
@@ -78,7 +103,6 @@ export default function Workouts() {
       <div className="absolute bottom-0 w-full text-center text-white/70 text-xs p-4">
         © {new Date().getFullYear()} FitTrack Pro
       </div>
-
     </div>
   );
 }
