@@ -24,7 +24,7 @@ export default function Dashboard() {
   });
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/api/workouts")
+    fetch(`${import.meta.env.VITE_API_URL}/api/workouts`)
       .then(res => res.json())
       .then(res => setData(res))
       .catch(err => console.log(err));
