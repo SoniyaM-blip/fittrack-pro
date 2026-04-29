@@ -6,6 +6,8 @@ import Workouts from "./pages/Workouts";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Goals from "./pages/Goals";
+import Calories from "./pages/Calories";
+
 
 
 
@@ -23,6 +25,7 @@ export default function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/workouts" element={<Workouts />} />
 	<Route path="/goals" element={<Goals />} />
+	<Route path="/calories" element={<Calories />} />
 
       </Routes>
     </BrowserRouter>
