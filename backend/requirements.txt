@@ -1,10 +1,8 @@
- 
 Flask==2.3.0
-SQLAlchemy==2.0
-pymysql
-pandas
-requests-cache
 flask-cors
-pytest
-flake8
-mypy
+gunicorn
+psycopg2-binary
+werkzeug
+SQLAlchemy==2.0.0
+requests-cache
+pandas
