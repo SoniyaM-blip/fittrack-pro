@@ -1,24 +1,21 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import psycopg2
+import os
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
-# Enable CORS (allow frontend Vercel app)
+# Allow frontend (Vercel)
 CORS(app, origins=["*"])
 
 
 # -------------------------
-# DB CONNECTION (POSTGRESQL)
+# DB CONNECTION (FIXED)
 # -------------------------
 def get_connection():
     return psycopg2.connect(
-        host="127.0.0.1",   # CHANGE THIS ON RENDER (use DB host)
-        database="fittrack",
-        user="postgres",
-        password="SoAnu",
-        port="5432"
+        os.environ["DATABASE_URL"]
     )
 
 
@@ -31,7 +28,7 @@ def home():
 
 
 # -------------------------
-# REGISTER USER
+# REGISTER
 # -------------------------
 @app.route("/api/register", methods=["POST"])
 def register():
@@ -41,9 +38,6 @@ def register():
         email = data.get("email")
         password = data.get("password")
         first_name = data.get("first_name")
-
-        if not email or not password:
-            return jsonify({"message": "Missing fields"}), 400
 
         hashed_password = generate_password_hash(password)
 
@@ -59,14 +53,14 @@ def register():
         cur.close()
         conn.close()
 
-        return jsonify({"message": "User registered successfully"}), 201
+        return jsonify({"message": "User registered successfully"})
 
     except Exception as e:
         return jsonify({"message": str(e)}), 500
 
 
 # -------------------------
-# LOGIN USER
+# LOGIN
 # -------------------------
 @app.route("/api/login", methods=["POST"])
 def login():
@@ -82,7 +76,7 @@ def login():
         cur.execute("""
             SELECT password, first_name
             FROM users
-            WHERE email = %s
+            WHERE email=%s
         """, (email,))
 
         user = cur.fetchone()
@@ -107,7 +101,7 @@ def login():
 
 
 # -------------------------
-# WORKOUTS STATS
+# WORKOUTS
 # -------------------------
 @app.route("/api/workouts", methods=["GET"])
 def get_workouts():
@@ -168,7 +162,7 @@ def create_goal():
         cur.close()
         conn.close()
 
-        return jsonify({"message": "Goal created successfully"}), 201
+        return jsonify({"message": "Goal created successfully"})
 
     except Exception as e:
         return jsonify({"message": str(e)}), 500
@@ -186,7 +180,7 @@ def get_goals(user_id):
         cur.execute("""
             SELECT id, goal_type, target_value, created_at
             FROM goals
-            WHERE user_id = %s
+            WHERE user_id=%s
             ORDER BY created_at DESC
         """, (user_id,))
 
@@ -195,7 +189,7 @@ def get_goals(user_id):
         cur.close()
         conn.close()
 
-        goals = [
+        return jsonify([
             {
                 "id": r[0],
                 "goal_type": r[1],
@@ -203,16 +197,14 @@ def get_goals(user_id):
                 "created_at": str(r[3])
             }
             for r in rows
-        ]
-
-        return jsonify(goals)
+        ])
 
     except Exception as e:
         return jsonify({"message": str(e)}), 500
 
 
 # -------------------------
-# RUN APP
+# RUN
 # -------------------------
 if __name__ == "__main__":
     app.run(debug=True)
