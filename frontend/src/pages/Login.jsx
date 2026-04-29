@@ -23,12 +23,12 @@ export default function Login() {
 
       const data = await res.json();
 
-      if (res.ok) {
+if (res.ok) {
   localStorage.setItem("token", data.token);
   localStorage.setItem("firstName", data.first_name);
 
-  // 🔥 trigger navbar update across app
-  window.dispatchEvent(new Event("storage"));
+  // 🔥 trigger navbar update
+  window.dispatchEvent(new Event("userLogin"));
 
   navigate("/dashboard");
 } else {

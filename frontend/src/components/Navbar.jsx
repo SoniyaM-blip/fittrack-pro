@@ -10,9 +10,10 @@ useEffect(() => {
     setName(localStorage.getItem("firstName"));
   };
 
-  window.addEventListener("storage", syncName);
+  // custom event listener
+  window.addEventListener("userLogin", syncName);
 
-  return () => window.removeEventListener("storage", syncName);
+  return () => window.removeEventListener("userLogin", syncName);
 }, []);
 
   const logout = () => {
