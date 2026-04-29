@@ -5,6 +5,9 @@ import Dashboard from "./pages/Dashboard";
 import Workouts from "./pages/Workouts";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Goals from "./pages/Goals";
+
+
 
 export default function App() {
   return (
@@ -19,6 +22,7 @@ export default function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/workouts" element={<Workouts />} />
+	<Route path="/goals" element={<Goals />} />
 
       </Routes>
     </BrowserRouter>

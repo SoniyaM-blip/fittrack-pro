@@ -134,6 +134,54 @@ def get_workouts():
     except Exception as e:
         return jsonify({"message": str(e)}), 500
 
+#------------------------------
+#         GOALS
+#-------------------------------
+
+@app.route("/api/goals", methods=["POST"])
+def create_goal():
+    data = request.json
+
+    user_id = data["user_id"]
+    goal_type = data["goal_type"]
+    target_value = data["target_value"]
+
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        INSERT INTO goals (user_id, goal_type, target_value)
+        VALUES (%s, %s, %s)
+    """, (user_id, goal_type, target_value))
+
+    mysql.connection.commit()
+    cur.close()
+
+    return jsonify({"message": "Goal created successfully"})
+
+
+@app.route("/api/goals/<int:user_id>", methods=["GET"])
+def get_goals(user_id):
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        SELECT id, goal_type, target_value, created_at
+        FROM goals
+        WHERE user_id = %s
+        ORDER BY created_at DESC
+    """, (user_id,))
+
+    rows = cur.fetchall()
+    cur.close()
+
+    goals = []
+    for r in rows:
+        goals.append({
+            "id": r[0],
+            "goal_type": r[1],
+            "target_value": r[2],
+            "created_at": str(r[3])
+        })
+
+    return jsonify(goals)
+
 # -------------------------
 # RUN
 # -------------------------
