@@ -6,34 +6,34 @@ export default function Home() {
   return (
     <div className="min-h-screen relative overflow-hidden text-white flex flex-col justify-center items-center text-center px-6">
 
-      {/* 🔥 ANIMATED GRADIENT BASE */}
-      <div className="absolute inset-0 bg-gradient-animation"></div>
+      {/* 🌈 LIGHT ANIMATED GRADIENT */}
+      <div className="absolute inset-0 bg-gradient-animation opacity-50"></div>
 
-      {/* 🖼 BACKGROUND IMAGE */}
+      {/* 🧘‍♀️ MODERN YOGA IMAGE */}
       <div
-        className="absolute inset-0 bg-cover bg-center opacity-60 mix-blend-overlay"
+        className="absolute inset-0 bg-cover bg-center opacity-80"
         style={{
           backgroundImage:
-            "url('https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=2000&q=80')",
+            "url('https://images.unsplash.com/photo-1552196563-55cd4e45efb3?auto=format&fit=crop&w=2000&q=80')",
         }}
-      />
+      ></div>
 
-      {/* 🌈 COLOR OVERLAY (MORE VIBRANT) */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/70 via-pink-600/60 to-orange-500/60"></div>
+      {/* ✨ SOFT LIGHT OVERLAY (NOT DARK) */}
+      <div className="absolute inset-0 bg-white/10"></div>
 
-      {/* ✨ GLOW BLOBS (MODERN EFFECT) */}
-      <div className="absolute w-72 h-72 bg-purple-500 rounded-full blur-3xl opacity-30 top-10 left-10 animate-pulse"></div>
-      <div className="absolute w-72 h-72 bg-pink-500 rounded-full blur-3xl opacity-30 bottom-10 right-10 animate-pulse"></div>
+      {/* ✨ GLOW EFFECTS */}
+      <div className="absolute w-72 h-72 bg-purple-400 rounded-full blur-3xl opacity-30 top-10 left-10"></div>
+      <div className="absolute w-72 h-72 bg-pink-400 rounded-full blur-3xl opacity-30 bottom-10 right-10"></div>
 
       {/* CONTENT */}
       <div className="relative z-10 max-w-2xl">
 
-        <h1 className="text-5xl md:text-6xl font-extrabold mb-4 tracking-tight">
+        <h1 className="text-5xl md:text-6xl font-extrabold mb-4">
           FitTrack Pro 💪
         </h1>
 
         <p className="text-lg md:text-xl mb-6 text-white/90">
-          Track workouts, monitor calories, smash goals — all in one powerful fitness platform.
+          Track workouts, monitor calories, and achieve your fitness goals — all in one place.
         </p>
 
         <div className="space-x-4 mb-8">
