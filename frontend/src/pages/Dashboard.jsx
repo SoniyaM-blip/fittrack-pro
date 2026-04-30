@@ -25,9 +25,9 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/api/workouts`)
-      .then(res => res.json())
-      .then(res => setData(res))
-      .catch(err => console.log(err));
+      .then((res) => res.json())
+      .then((res) => setData(res))
+      .catch((err) => console.log(err));
   }, []);
 
   const chartData = [
@@ -37,15 +37,6 @@ export default function Dashboard() {
     { name: "HIIT", value: data.hiit },
     { name: "Pilates", value: data.pilates },
     { name: "Stretching", value: data.stretching },
-  ];
-
-  const colors = [
-    "#a5b4fc",
-    "#a5b4fc",
-    "#a5b4fc",
-    "#a5b4fc",
-    "#a5b4fc",
-    "#a5b4fc",
   ];
 
   return (
@@ -67,9 +58,15 @@ export default function Dashboard() {
       {/* CONTENT */}
       <div className="relative z-10 pt-24 px-10 max-w-6xl mx-auto">
 
-        {/* HEADER */}
+        {/* HEADER (FIX FOR TESTING) */}
         <div className="mb-8">
-          <h1 className="text-3xl font-semibold">Dashboard Overview</h1>
+          <h1
+            data-testid="dashboard-title"
+            className="text-3xl font-semibold"
+          >
+            Dashboard Overview
+          </h1>
+
           <p className="text-white/70 text-sm">
             Workout analytics at a glance
           </p>
@@ -78,7 +75,7 @@ export default function Dashboard() {
         {/* TOP CARDS */}
         <div className="grid grid-cols-3 gap-4 mb-8">
 
-          {chartData.map(item => (
+          {chartData.map((item) => (
             <div
               key={item.name}
               className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10"
@@ -93,7 +90,7 @@ export default function Dashboard() {
         {/* MAIN GRID */}
         <div className="grid grid-cols-5 gap-6">
 
-          {/* BAR CHART (WIDE LEFT) */}
+          {/* BAR CHART */}
           <div className="col-span-3 bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/10">
 
             <h2 className="mb-4 text-sm text-white/70">
@@ -111,86 +108,35 @@ export default function Dashboard() {
 
           </div>
 
-          {/* PIE CHART (RIGHT) */}
+          {/* PIE CHART */}
           <div className="col-span-2 bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/10">
 
             <h2 className="mb-4 text-sm text-white/70">
               Workout Split
             </h2>
 
- <ResponsiveContainer width="100%" height={260}>
-  <PieChart>
+            <ResponsiveContainer width="100%" height={260}>
+              <PieChart>
 
-    <defs>
-      <linearGradient id="gradCardio" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stopColor="#ff6b6b" />
-        <stop offset="100%" stopColor="#ff8e8e" />
-      </linearGradient>
+                <Pie
+                  data={chartData}
+                  dataKey="value"
+                  nameKey="name"
+                  outerRadius={90}
+                  label
+                >
+                  <Cell fill="#ff6b6b" />
+                  <Cell fill="#4dabf7" />
+                  <Cell fill="#51cf66" />
+                  <Cell fill="#ffd43b" />
+                  <Cell fill="#845ef7" />
+                  <Cell fill="#ff922b" />
+                </Pie>
 
-      <linearGradient id="gradStrength" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stopColor="#4dabf7" />
-        <stop offset="100%" stopColor="#74c0fc" />
-      </linearGradient>
+                <Tooltip />
 
-      <linearGradient id="gradYoga" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stopColor="#51cf66" />
-        <stop offset="100%" stopColor="#8ce99a" />
-      </linearGradient>
-
-      <linearGradient id="gradHiit" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stopColor="#ffd43b" />
-        <stop offset="100%" stopColor="#ffe066" />
-      </linearGradient>
-
-      <linearGradient id="gradPilates" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stopColor="#845ef7" />
-        <stop offset="100%" stopColor="#b197fc" />
-      </linearGradient>
-
-      <linearGradient id="gradStretch" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stopColor="#ff922b" />
-        <stop offset="100%" stopColor="#ffc078" />
-      </linearGradient>
-    </defs>
-
-    <Pie
-      data={chartData}
-      dataKey="value"
-      nameKey="name"
-      outerRadius={90}
-      labelLine={true}
-      label={({ cx, cy, midAngle, outerRadius, name }) => {
-        const RADIAN = Math.PI / 180;
-        const radius = outerRadius + 15;
-        const x = cx + radius * Math.cos(-midAngle * RADIAN);
-        const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-        return (
-          <text
-            x={x}
-            y={y}
-            fill="white"
-            fontSize={12}
-            textAnchor={x > cx ? "start" : "end"}
-            dominantBaseline="central"
-          >
-            {name}
-          </text>
-        );
-      }}
-    >
-      <Cell fill="url(#gradCardio)" />
-      <Cell fill="url(#gradStrength)" />
-      <Cell fill="url(#gradYoga)" />
-      <Cell fill="url(#gradHiit)" />
-      <Cell fill="url(#gradPilates)" />
-      <Cell fill="url(#gradStretch)" />
-    </Pie>
-
-    <Tooltip />
-
-  </PieChart>
-</ResponsiveContainer>
+              </PieChart>
+            </ResponsiveContainer>
 
           </div>
 
