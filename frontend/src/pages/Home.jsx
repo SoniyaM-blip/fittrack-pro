@@ -6,54 +6,58 @@ export default function Home() {
   return (
     <div className="min-h-screen relative overflow-hidden text-white flex flex-col justify-center items-center text-center px-6">
 
-      {/* ANIMATED GRADIENT BACKGROUND (OPTIONAL LAYER BEHIND IMAGE) */}
-      <div className="absolute inset-0 bg-gradient-animation opacity-40"></div>
+      {/* 🔥 ANIMATED GRADIENT BASE */}
+      <div className="absolute inset-0 bg-gradient-animation"></div>
 
-      {/* BACKGROUND IMAGE */}
+      {/* 🖼 BACKGROUND IMAGE */}
       <div
-        className="absolute inset-0 bg-cover bg-center"
+        className="absolute inset-0 bg-cover bg-center opacity-60 mix-blend-overlay"
         style={{
           backgroundImage:
-            "url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438')",
+            "url('https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=2000&q=80')",
         }}
       />
 
-      {/* DARK OVERLAY */}
-      <div className="absolute inset-0 bg-black/60"></div>
+      {/* 🌈 COLOR OVERLAY (MORE VIBRANT) */}
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/70 via-pink-600/60 to-orange-500/60"></div>
+
+      {/* ✨ GLOW BLOBS (MODERN EFFECT) */}
+      <div className="absolute w-72 h-72 bg-purple-500 rounded-full blur-3xl opacity-30 top-10 left-10 animate-pulse"></div>
+      <div className="absolute w-72 h-72 bg-pink-500 rounded-full blur-3xl opacity-30 bottom-10 right-10 animate-pulse"></div>
 
       {/* CONTENT */}
       <div className="relative z-10 max-w-2xl">
 
-        <h1 className="text-5xl font-bold mb-4">
+        <h1 className="text-5xl md:text-6xl font-extrabold mb-4 tracking-tight">
           FitTrack Pro 💪
         </h1>
 
-        <p className="text-lg mb-6">
-          Track your workouts, monitor calories, set goals, and transform your fitness journey with real-time insights and progress tracking.
+        <p className="text-lg md:text-xl mb-6 text-white/90">
+          Track workouts, monitor calories, smash goals — all in one powerful fitness platform.
         </p>
 
-        <div className="space-x-4">
+        <div className="space-x-4 mb-8">
           <button
             onClick={() => navigate("/login")}
-            className="bg-white text-black px-6 py-2 rounded-full font-semibold"
+            className="bg-white text-black px-6 py-2 rounded-full font-semibold hover:scale-105 transition"
           >
             Login
           </button>
 
           <button
             onClick={() => navigate("/register")}
-            className="border border-white px-6 py-2 rounded-full"
+            className="border border-white px-6 py-2 rounded-full hover:bg-white/20 transition"
           >
             Register
           </button>
         </div>
 
         {/* FEATURES */}
-        <div className="mt-10 grid gap-4 text-sm opacity-90">
+        <div className="grid gap-3 text-sm md:text-base text-white/90">
           <p>🏋️ Smart Workout Tracking</p>
-          <p>🍎 Calorie Monitoring System</p>
-          <p>🎯 Personal Fitness Goals</p>
-          <p>📊 Progress Dashboards & Charts</p>
+          <p>🍎 Calorie Monitoring</p>
+          <p>🎯 Personal Goals</p>
+          <p>📊 Live Progress Insights</p>
         </div>
 
       </div>
