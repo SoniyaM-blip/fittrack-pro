@@ -1,53 +1,82 @@
-import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
+import { useState, useEffect } from "react";
 
 export default function Calories() {
-  const [entries, setEntries] = useState([]);
+  const [food, setFood] = useState("");
+  const [calories, setCalories] = useState("");
+  const [list, setList] = useState([]);
+
+  const userId = 1;
+
+  const fetchCalories = async () => {
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/calories/${userId}`
+    );
+    const data = await res.json();
+    setList(data.items || []);
+  };
+
+  const addCalories = async () => {
+    await fetch(`${import.meta.env.VITE_API_URL}/api/calories`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user_id: userId,
+        food_name: food,
+        calories: Number(calories),
+        meal_type: "meal",
+      }),
+    });
+
+    setFood("");
+    setCalories("");
+    fetchCalories();
+  };
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/api/calories`)
-      .then((res) => res.json())
-      .then((data) => setEntries(data))
-      .catch((err) => console.log(err));
+    fetchCalories();
   }, []);
 
   return (
-    <div className="min-h-screen text-white relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-black to-gray-900 text-white p-6 pt-24">
 
-      <Navbar />
+      <h2 className="text-3xl font-bold mb-6">Calories Tracker 🍎</h2>
 
-      {/* BACKGROUND */}
-      <div className="absolute inset-0 bg-gradient-animation"></div>
-      <div className="absolute inset-0 bg-black/60"></div>
+      {/* INPUT SECTION */}
+      <div className="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/10 mb-6">
+        <input
+          placeholder="Food name"
+          value={food}
+          onChange={(e) => setFood(e.target.value)}
+          className="p-2 m-2 text-black rounded"
+        />
 
-      <div className="relative z-10 px-8 pt-24 max-w-5xl mx-auto">
+        <input
+          placeholder="Calories"
+          value={calories}
+          onChange={(e) => setCalories(e.target.value)}
+          className="p-2 m-2 text-black rounded"
+        />
 
-        <h1 className="text-3xl font-bold mb-6">🍎 Calorie Tracker</h1>
+        <button
+          onClick={addCalories}
+          className="bg-green-500 px-4 py-2 rounded ml-2"
+        >
+          Add
+        </button>
+      </div>
 
-        {entries.length === 0 ? (
-          <p>No calorie data yet</p>
-        ) : (
-          <div className="grid md:grid-cols-2 gap-6">
-            {entries.map((item) => (
-              <div
-                key={item.id}
-                className="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20"
-              >
-                <h2 className="text-xl font-semibold mb-2">
-                  {item.food_name}
-                </h2>
-
-                <p className="text-white/80">
-                  Calories: {item.calories}
-                </p>
-
-                <p className="text-xs text-white/60 mt-2">
-                  Date: {item.created_at}
-                </p>
-              </div>
-            ))}
+      {/* LIST */}
+      <div>
+        {list.map((item, i) => (
+          <div
+            key={i}
+            className="bg-white/10 backdrop-blur-md border border-white/10 p-4 rounded-xl mt-3"
+          >
+            <p className="font-semibold">{item.food_name}</p>
+            <p>{item.calories} kcal</p>
+            <p className="text-sm text-white/60">{item.meal_type}</p>
           </div>
-        )}
+        ))}
       </div>
     </div>
   );
