@@ -32,19 +32,19 @@ export default function Workouts() {
     { title: "Personal Training", desc: "1-on-1 coaching." },
   ];
 
-  // 🎨 MODERN COLOR PALETTE (MATCH DASHBOARD)
   const COLORS = [
-    "#7c3aed", // purple
-    "#ec4899", // pink
-    "#f97316", // orange
-    "#06b6d4", // cyan
-    "#22c55e", // green
-    "#eab308", // yellow
+    "#7c3aed",
+    "#ec4899",
+    "#f97316",
+    "#06b6d4",
+    "#22c55e",
+    "#eab308",
   ];
 
+  // ✅ FIX: Capitalize labels
   const chartData = data
     ? Object.entries(data).map(([key, value]) => ({
-        name: key,
+        name: key.charAt(0).toUpperCase() + key.slice(1),
         value,
       }))
     : [];
@@ -120,14 +120,19 @@ export default function Workouts() {
               <h2 className="mb-4 font-semibold">Workout Count</h2>
 
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={chartData}>
+                {/* ✅ FIX: spacing added */}
+                <BarChart data={chartData} barCategoryGap="20%">
                   <CartesianGrid stroke="rgba(255,255,255,0.1)" />
 
+                  {/* ✅ FIX: rotated labels */}
                   <XAxis
                     dataKey="name"
                     stroke="#ffffff"
-                    tick={{ fill: "#fff" }}
+                    tick={{ fill: "#fff", fontSize: 12 }}
+                    angle={-20}
+                    textAnchor="end"
                   />
+
                   <YAxis stroke="#ffffff" tick={{ fill: "#fff" }} />
 
                   <Tooltip
@@ -138,8 +143,8 @@ export default function Workouts() {
                     }}
                   />
 
-                  {/* 🎨 COLORED BARS (FIXED) */}
-                  <Bar dataKey="value">
+                  {/* ✅ FIX: ensure small bars visible */}
+                  <Bar dataKey="value" minPointSize={5}>
                     {chartData.map((entry, index) => (
                       <Cell
                         key={`cell-${index}`}
@@ -147,6 +152,7 @@ export default function Workouts() {
                       />
                     ))}
                   </Bar>
+
                 </BarChart>
               </ResponsiveContainer>
             </div>
