@@ -10,6 +10,7 @@ import {
   XAxis,
   YAxis,
   ResponsiveContainer,
+  CartesianGrid,
 } from "recharts";
 
 export default function Workouts() {
@@ -31,7 +32,15 @@ export default function Workouts() {
     { title: "Personal Training", desc: "1-on-1 coaching." },
   ];
 
-  const COLORS = ["#ff6b6b","#feca57","#48dbfb","#1dd1a1","#5f27cd","#ff9ff3"];
+  // 🎨 MODERN COLOR PALETTE (MATCH DASHBOARD)
+  const COLORS = [
+    "#7c3aed", // purple
+    "#ec4899", // pink
+    "#f97316", // orange
+    "#06b6d4", // cyan
+    "#22c55e", // green
+    "#eab308", // yellow
+  ];
 
   const chartData = data
     ? Object.entries(data).map(([key, value]) => ({
@@ -45,6 +54,7 @@ export default function Workouts() {
 
       <Navbar />
 
+      {/* BACKGROUND */}
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
@@ -52,7 +62,7 @@ export default function Workouts() {
             "url('https://images.unsplash.com/photo-1558611848-73f7eb4001a1?auto=format&fit=crop&w=2000&q=80')",
         }}
       />
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-700/70 via-pink-500/60 to-orange-400/50" />
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/80 via-pink-700/60 to-orange-500/50" />
 
       <div className="relative z-10 px-8 pt-24 max-w-6xl mx-auto">
 
@@ -60,7 +70,10 @@ export default function Workouts() {
 
         <div className="grid md:grid-cols-3 gap-6 mb-16">
           {waysToTrain.map((item, index) => (
-            <div key={index} className="bg-white/10 p-6 rounded-2xl">
+            <div
+              key={index}
+              className="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 hover:scale-105 transition"
+            >
               <h2 className="text-xl font-semibold mb-2">{item.title}</h2>
               <p className="text-white/80 text-sm">{item.desc}</p>
             </div>
@@ -74,37 +87,72 @@ export default function Workouts() {
         ) : (
           <div className="grid md:grid-cols-2 gap-10">
 
-            <div className="bg-white/10 p-6 rounded-2xl">
+            {/* PIE CHART */}
+            <div className="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20">
               <h2 className="mb-4 font-semibold">Workout Split</h2>
 
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
-                  <Pie data={chartData} dataKey="value" nameKey="name" outerRadius={110} label>
+                  <Pie
+                    data={chartData}
+                    dataKey="value"
+                    nameKey="name"
+                    outerRadius={110}
+                    label
+                  >
                     {chartData.map((_, index) => (
                       <Cell key={index} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "#1f2937",
+                      border: "none",
+                      borderRadius: "10px",
+                    }}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             </div>
 
-            <div className="bg-white/10 p-6 rounded-2xl">
+            {/* BAR CHART */}
+            <div className="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20">
               <h2 className="mb-4 font-semibold">Workout Count</h2>
 
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={chartData}>
-                  <XAxis dataKey="name" stroke="#fff" />
-                  <YAxis stroke="#fff" />
-                  <Tooltip />
-                  <Bar dataKey="value" fill="#ffffff" />
+                  <CartesianGrid stroke="rgba(255,255,255,0.1)" />
+
+                  <XAxis
+                    dataKey="name"
+                    stroke="#ffffff"
+                    tick={{ fill: "#fff" }}
+                  />
+                  <YAxis stroke="#ffffff" tick={{ fill: "#fff" }} />
+
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "#1f2937",
+                      border: "none",
+                      borderRadius: "10px",
+                    }}
+                  />
+
+                  {/* 🎨 COLORED BARS (FIXED) */}
+                  <Bar dataKey="value">
+                    {chartData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             </div>
 
           </div>
         )}
-
       </div>
     </div>
   );
